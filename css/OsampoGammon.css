@@ -1,0 +1,163 @@
+/**
+  bgboardapp.css
+  designed by hinacoppy 2019
+*/
+
+/* document outline ----------------------------------------- */
+*{
+  user-select:none; /* タップ、ドラッグで文字選択しないように */
+}
+html{
+  height:100%;
+  overflow:hidden;
+  overscroll-behavior:none; /* バウンススクロールを抑止(only for Android) */
+}
+body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  height:100%;
+  font-family:'Arial', 'Meiryo UI';
+}
+
+/* Game Display Layout settings ------------------------------------- */
+/* 以下すべて相対サイズにし、レスポンシブ対応可能にしておく */
+
+.container{
+  position:relative;
+}
+#board{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+}
+.point{
+  position:absolute;
+  width:6vw;
+  height:60vh;
+/*  background-color:#eef;*/
+  border:3px solid #abf;
+  color:#29f;
+  border-radius:20px;
+}
+.pool{
+  position:absolute;
+  width:6vw;
+  height:30vh;
+  border:3px solid #abf;
+  border-radius:40px;
+/*  background-color:#76f;*/
+}
+.goal{
+  position:absolute;
+  width:6vw;
+  height:50vh;
+  border:6px solid #2f0;
+  border-radius:20px;
+/*  background-color:#76f;*/
+}
+.oparationbtn{
+  position:absolute;
+  display:inline-block;
+  background-color:#adf;
+  border:3px solid #29f;
+  color:#29f;
+  border-radius:20px;
+  padding:0 2vw;
+  font-size:2vw;
+  height:10vh;
+  line-height:10vh;
+  white-space:nowrap;
+}
+.oparationbtn:disabled {
+  color:#666;
+  background-color:#999;
+  border-color:#666;
+}
+.panel{
+  position:absolute;
+  z-index:50;
+  width:40vw;
+  height:50vh;
+  background-color:#bbd;
+  border:3px solid #fb0;
+  border-radius:50px;
+  text-align: center;
+  font-size: 4vw;
+  color:#214;
+/*  display:none;*/
+}
+.dicepool{
+  position:absolute;
+  border:3px solid #b0f;
+  width:19vw;
+  height:15vh;
+}
+.player1base{
+  background-color:#fee;
+}
+.player2base{
+  background-color:#eef;
+}
+/* Board Object settings ------------------------------------- */
+.dice{
+  position:absolute;
+  font-size:5vw;
+  z-index:40;
+}
+
+.cubecenter{
+  transform:rotateZ(-90deg);
+}
+.turn1{
+  transform:rotateZ(0deg);
+}
+.turn2{
+  transform:rotateZ(180deg);
+}
+.player1col{
+  color:#fbb;
+}
+.player2col{
+  color:#bbf;
+}
+.chequer{
+  display:block;
+  position:absolute;
+  width:6vw;
+  font-size:5vw;
+}
+
+/* Point Triangles ------------------------------------- */
+.flash{
+  opacity:0.4;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+.dicearea{
+  position:absolute;
+  width:30vw;
+  height:20vh;
+  background-color:#fdf;
+  border:3px solid #dbf;
+  color:#555;
+  border-radius:20px;
+}
+/* settingwindow decorations ------------------------------------- */
+.settings{
+/*  position:absolute;*/
+  display:none;
+  z-index:99;
+/*  background-color:#dff;
+  border:3px solid #00f;
+  padding:2vh 4vw;
+  font-size:1.8vw;*/
+}
+.popuptitle{
+  font-size:2.2vw;
+  color:#fff;
+  background-color:#46f;
+  padding:2vh 2vw;
+  margin-bottom:2vh;
+}
