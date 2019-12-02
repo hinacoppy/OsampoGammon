@@ -258,9 +258,10 @@ console.log("isMovable",fr, to, strict, movable);
   }
 
   moveFinished() {
-//console.log("moveFinished", this._usable_dice, this._ptcol, this._ptno, this.turn);
+console.log("moveFinished", this._usable_dice, this._ptcol, this._ptno, this.turn);
     if (this._usable_dice.length == 0) { return true; } //使える目がなくなった時
-    for (let pt=1; pt<13; pt++) { //動かせる先がなくなった時
+    for (let q=1; q<13; q++) { //動かせる先がなくなった時
+      const pt = this._turnpos(q);
       if (this._ptcol[pt] != this.turn) { continue; }
       for (const d of this._usable_dice) {
         const ds = (pt - d < 0) ? 0 : (pt - d);
