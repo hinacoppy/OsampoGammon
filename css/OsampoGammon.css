@@ -35,7 +35,7 @@ body{
 }
 .point{
   position:absolute;
-  width:6vw;
+  width:5vw;
   height:60vh;
 /*  background-color:#eef;*/
   border:3px solid #abf;
@@ -44,7 +44,7 @@ body{
 }
 .pool{
   position:absolute;
-  width:6vw;
+  width:11vw;
   height:30vh;
   border:3px solid #abf;
   border-radius:40px;
@@ -52,10 +52,10 @@ body{
 }
 .goal{
   position:absolute;
-  width:6vw;
+  width:11vw;
   height:50vh;
   border:6px solid #2f0;
-  border-radius:20px;
+  border-radius:40px;
 /*  background-color:#76f;*/
 }
 .oparationbtn{
@@ -92,8 +92,8 @@ body{
 .dicepool{
   position:absolute;
   border:3px solid #b0f;
-  width:19vw;
-  height:15vh;
+  width:14vw;
+  height:13vh;
 }
 .player1base{
   background-color:#fee;
@@ -118,21 +118,21 @@ body{
   transform:rotateZ(180deg);
 }
 .player1col{
-  color:#fbb;
+  color:#f55;
 }
 .player2col{
-  color:#bbf;
+  color:#55f;
 }
 .chequer{
   display:block;
   position:absolute;
-  width:6vw;
-  font-size:5vw;
+  width:5vw;
+  font-size:4vw;
 }
 
 /* Point Triangles ------------------------------------- */
 .flash{
-  opacity:0.4;
+/*  opacity:0.4;*/
   box-shadow: 0 0 20px rgba(0, 0, 0, .6);
 }
 .dicearea{
