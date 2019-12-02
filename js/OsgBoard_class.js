@@ -27,7 +27,7 @@ class OsgBoard {
       this.point[i] = $('#pt' + i);
       this.point[i].css(this.getPosObj(this.pointX[i], this.pointY[i]));
     }
-    this.pointAll = $(".point");
+    this.pointAll = $(".point,.goal");
 
     //Chequer
     this.chequer = [[],[],[]];
@@ -104,15 +104,15 @@ class OsgBoard {
 //        const st = this.chequer[player][i].stack;
 
         if (pt == 14 || pt == 15) { //bear off
-          const relativeY = [1, 2, 0, 3, 1.3, 2.3, 0.3, 3.3];
-          ex = (ptStack[pt] < 4) ? this.pointX[pt] : this.pointX[pt] + 2 * this.vw;
+          const relativeY = [2, 3, 1, 4, 2.5, 3.5, 1.5, 4.5];
+          ex = ((ptStack[pt] < 4) ? this.pointX[pt] : this.pointX[pt] + 4 * this.vw) + 1 * this.vw;
           ey = this.pointY[pt] + (relativeY[ptStack[pt]] * this.pieceHeight);
         } else if (pt == 0 || pt == 13) { //on the bar
-          const relativeY = [1, 2, 0, 3, 1.3, 2.3, 0.3, 3.3];
-          ex = (ptStack[pt] < 4) ? this.pointX[pt] : this.pointX[pt] + 2 * this.vw;
+          const relativeY = [1, 0.2, 2, 2.3, 2.7, 1.5, 0.5, 2.8];
+          ex = ((ptStack[pt] % 2 == 0) ? this.pointX[pt]  : this.pointX[pt] + 4 * this.vw) + 1 * this.vw;
           ey = this.pointY[pt] + (relativeY[ptStack[pt]] * this.pieceHeight);
         } else { //in field
-          const relativeY = [0,4, 5, 3, 6, 2, 7, 1, 0];
+          const relativeY = [3,4,2,5,1,6,0,7];
           ex = this.pointX[pt];
           ey = this.pointY[pt] + (relativeY[ptStack[pt]] * this.pieceHeight);
         }
@@ -156,13 +156,14 @@ class OsgBoard {
 //    this.pieceWidth = 5 * this.vw; // equal to width in css
     this.pieceHeight = 8 * this.vh;
     this.boffHeight  = 50 * this.vh; //equal to .goal height in css
+    this.boffWidth   = 11 * this.vw; //equal to .goal width in css
     this.pointHeight = 60 * this.vh; //equal to .point height in css
-    this.pointWidth = 7 * this.vw;
+    this.pointWidth  =  6 * this.vw; //equal to .point width in css
 
 console.log("bgBoardConfig", this.mainBoardWidth, this.vw, this.pointWidth);
 
-    this.pointX = [ 1,  8, 15, 22, 29, 36, 43, 50, 57, 64, 71, 78, 85, 92,  1, 92];
-    this.pointY = [10, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 65, 40,  5];
+    this.pointX = [ 1, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 87,  1, 87];
+    this.pointY = [10, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 60, 45,  5];
     for (let i=0; i< this.pointX.length; i++) {
       this.pointX[i] *= this.vw;
     }
@@ -199,14 +200,13 @@ console.log("bgBoardConfig", this.mainBoardWidth, this.vw, this.pointWidth);
 
 
   getDragEndPoint(pos, player) {
-    const ptt = Math.floor((pos.left - 1 * this.vw) / this.pointWidth + 0.5);
+    const ptt = Math.floor((pos.left - 8 * this.vw) / this.pointWidth + 0.5);
     const py = Math.floor(pos.top + 20);
     let pt;
-    if (ptt >=1 && ptt <= 12) { pt = (player == 1) ? ptt : 13 - ptt; }
-    else if (ptt == 0)  { pt = 14; }
-    else if (ptt == 13) { pt = 15; }
+    if (ptt <=  0) { pt = 14; }
+    else if (ptt >= 13) { pt = 15; }
+    else if (ptt >=1 && ptt <= 12) { pt = (player == 1) ? ptt : 13 - ptt; }
     else { pt = 99; }
-//    const pt = (ptt > 0 && ptt < 13) ? ((player == 1) ? ptt : 13 - ptt) : ptt;
     const ph = (ptt >= 1 && ptt <= 12) ? this.pointHeight : this.boffHeight;
 
     let ret;
@@ -226,7 +226,7 @@ console.log("getDragEndPoint", pos, ph, py, pt, player, pt, ret);
     const chker = this.chequer[player].find(elem => elem.domid == id);
     const pt = chker.point;
     const p = (player == 1) ? pt : 13 - pt;
-console.log("getDragStartPoint", id, player, pt);
+console.log("getDragStartPoint", id, player, pt, p);
     return p;
   }
 

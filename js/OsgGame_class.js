@@ -67,8 +67,8 @@ class OsgGame {
   }
 
   beginNewGame() {
-    const initpos = "-b-C--cC--c-B-";
-//    const initpos = "-a--a----F--B-";
+//  const initpos = "-b-C--cC--c-B-";
+    const initpos = "---ccbBBD-----";
     this.osgid.initialize(initpos);
     this.board.showBoard2(this.osgid);
     this.swapChequerDraggable(true, true);
@@ -151,7 +151,7 @@ console.log("showRollPanel", player);
 
   showDoneUndoPanel(player, opening = false) {
 const moveFinished = this.osgid.moveFinished();
-//    this.donebtn.prop("disabled", (!moveFinished && this.flashflg) );
+    this.donebtn.prop("disabled", (!moveFinished && this.flashflg) );
 //    this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
 console.log("showDoneUndoPanel", player, moveFinished , this.flashflg);
     this.showElement(this.donebtn, player);
@@ -185,8 +185,8 @@ console.log("showDoneUndoPanel", player, moveFinished , this.flashflg);
     if (pos == null) {
       const tf = (player) ? "T" : "F";
       const idpos = elem.attr("id") + tf;
-      const pposary = {"rollbtnT": [70, 90], "undobtnT": [30, 90], "donebtnT": [50, 90],
-                       "rollbtnF": [30, 10], "undobtnF": [70, 10], "donebtnF": [50, 10]};
+      const pposary = {"rollbtnT": [50, 90], "undobtnT": [30, 90], "donebtnT": [50, 90],
+                       "rollbtnF": [50, 10], "undobtnF": [70, 10], "donebtnF": [50, 10]};
       const ppos =  pposary[idpos];
       xx = ppos[0];
       yy = ppos[1];
@@ -243,11 +243,12 @@ console.log("dragStart", this.dragStartPt, this.dragObject, event);
 
   dragStopAction(event, ui) {
     this.flashOffMovablePoint();
-    this.dragEndPt = this.board.getDragEndPoint(ui.position, OsgUtil.cvtTurnGm2Bd(this.player));
+    const pt = this.board.getDragEndPoint(ui.position, OsgUtil.cvtTurnGm2Bd(this.player));
+    this.dragEndPt = (pt == 14 || pt == 15) ? 0 : pt;
     const xg = this.osgid;
     const ok = xg.isMovable(this.dragStartPt, this.dragEndPt, this.flashflg);
     const hit = xg.isHitted(this.dragEndPt);
-console.log("dragStopOK?", ok, hit, this.dragStartPt, this.dragEndPt);
+console.log("dragStopOK?", ok, hit, this.dragStartPt, pt, this.dragEndPt);
 
     if (ok) {
       if (hit) {
@@ -270,8 +271,10 @@ console.log("dragStopOK ", movestr, this.osgid.osgidstr);
     } else {
       this.dragObject.animate(this.dragStartPos, 300);
     }
-console.log("dragStop button", this.osgid.moveFinished() , this.flashflg);
-    this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
+const f = this.osgid.moveFinished();
+console.log("dragStop button", f , this.flashflg);
+//    this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
+    this.donebtn.prop("disabled", (!f && this.flashflg) );
     const turn = OsgUtil.cvtTurnGm2Xg(this.player);
     if (this.osgid.get_boff(turn) == 8) { this.bearoffAllAction(); }
   }
@@ -292,12 +295,14 @@ console.log("swapChequerDraggable",player, plyr, this.board.chequer[plyr]);
     if (this.flashflg) {
       let dest2 = [];
       const destpt = this.osgid.movablePoint(this.dragStartPt, this.flashflg);
-      if (this.player) { dest2 = destpt; }
-      else {
-        for (const p of destpt) {
-          const pt = (p == 0) ? 0 : 13 - p;
-          dest2.push(pt);
+      for (const p of destpt) {
+        let pt;
+        if (this.player) { 
+          pt = (p == 0) ? 14 : p;
+        } else {
+          pt = (p == 0) ? 15 : 13 - p;
         }
+        dest2.push(pt);
       }
 console.log("flashOnMovablePoint", startpt, destpt, dest2);
       this.board.flashOnMovablePoint(dest2, OsgUtil.cvtTurnGm2Bd(this.player));
