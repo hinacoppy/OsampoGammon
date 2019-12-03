@@ -51,14 +51,8 @@ body{
   position:absolute;
   width:11vw;
   height:50vh;
-<<<<<<< HEAD
   border:6px solid #5fa;
   border-radius:40px;
-=======
-  border:6px solid #2f0;
-  border-radius:40px;
-/*  background-color:#76f;*/
->>>>>>> b4786fdc2a268cca66a00ae1493203c1fc3cb643
 }
 .oparationbtn{
   position:absolute;
@@ -95,13 +89,7 @@ body{
   border:3px solid #b0f;
   width:14vw;
   height:13vh;
-<<<<<<< HEAD
   border-radius:20px;
-=======
-}
-.player1base{
-  background-color:#fee;
->>>>>>> b4786fdc2a268cca66a00ae1493203c1fc3cb643
 }
 .settings{
   position:absolute;
@@ -141,26 +129,14 @@ body{
 .player2col{
   color:#55f;
 }
-<<<<<<< HEAD
 .player1base{
   background-color:#fee;
 }
 .player2base{
   background-color:#eef;
-=======
-.chequer{
-  display:block;
-  position:absolute;
-  width:5vw;
-  font-size:4vw;
->>>>>>> b4786fdc2a268cca66a00ae1493203c1fc3cb643
 }
 
 /* Point Flashing ------------------------------------- */
 .flash{
-<<<<<<< HEAD
-=======
-/*  opacity:0.4;*/
->>>>>>> b4786fdc2a268cca66a00ae1493203c1fc3cb643
   box-shadow: 0 0 20px rgba(0, 0, 0, .6);
 }
