@@ -44,24 +44,24 @@ class OsgGame {
 
   setEventHandler() {
     //Button Click Event
-    this.openrollbtn.on('vclick', () => { this.rollAction(true); });
-    this.rollbtn.    on('vclick', () => { this.rollAction(false); });
-    this.donebtn.    on('vclick', () => { this.doneAction(); });
-    this.undobtn.    on('vclick', () => { this.undoAction(); });
-    this.nextgamebtn.on('vclick', () => { this.nextGameAction(); });
+    this.openrollbtn.on('tap click', () => { this.rollAction(true); });
+    this.rollbtn.    on('tap click', () => { this.rollAction(false); });
+    this.donebtn.    on('tap click', () => { this.doneAction(); });
+    this.undobtn.    on('tap click', () => { this.undoAction(); });
+    this.nextgamebtn.on('tap click', () => { this.nextGameAction(); });
 
     //設定画面
     const yy = this.settingbtn.height();
-    this.settingbtn.on('vclick', () => {
+    this.settingbtn.on('tap click', () => {
 //      this.settings.css({left:0, top:yy});
       this.settings.css({left:0, top:yy}).slideToggle("normal");
     });
-    this.resignbtn. on('vclick', () => { //for DEBUG
+    this.resignbtn. on('tap click', () => { //for DEBUG
       this.settings.slideToggle("normal");
       this.swapTurn();
       this.bearoffAllAction();
     });
-    this.newgamebtn.on('vclick', () => {
+    this.newgamebtn.on('tap click', () => {
       this.settings.slideToggle("normal"); //画面を消す
       this.nextGameAction();
     });
