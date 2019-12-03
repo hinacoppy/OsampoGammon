@@ -39,11 +39,7 @@ class OsgBoard {
     }
   }
 
-  showBoard2(xg) { // input for XGID object
-    this.xgidstr = xg.xgidstr;
-    if (xg.get_boff(0) < 0 || xg.get_boff(1) < 0) {
-      alert("Invalid XGID!!\n" + xg.xgidstr + "\nbearoff(0)=" + xg.get_boff(0) + "\nbearoff(1)=" + xg.get_boff(1));
-    }
+  showBoard(xg) { // input for XGID object
     this.showPosition(xg);
     this.showDiceAll(xg.get_turn(), xg.get_dice(1), xg.get_dice(2));
   }
@@ -149,18 +145,15 @@ class OsgBoard {
 
   bgBoardConfig() {
     this.mainBoardHeight = this.mainBoard.height()
-    this.mainBoardWidth = this.mainBoard.width()
+    this.mainBoardWidth  = this.mainBoard.width()
     this.vw = this.mainBoardWidth / 100;
     this.vh = this.mainBoardHeight / 100;
 
-//    this.pieceWidth = 5 * this.vw; // equal to width in css
     this.pieceHeight = 8 * this.vh;
     this.boffHeight  = 50 * this.vh; //equal to .goal height in css
     this.boffWidth   = 11 * this.vw; //equal to .goal width in css
     this.pointHeight = 60 * this.vh; //equal to .point height in css
     this.pointWidth  =  6 * this.vw; //equal to .point width in css
-
-console.log("bgBoardConfig", this.mainBoardWidth, this.vw, this.pointWidth);
 
     this.pointX = [ 1, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 87,  1, 87];
     this.pointY = [10, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 60, 45,  5];
@@ -178,12 +171,12 @@ console.log("bgBoardConfig", this.mainBoardWidth, this.vw, this.pointWidth);
     this.dice11X = this.pointX[11];
     this.dice20X = this.pointX[2];
     this.dice21X = this.pointX[3];
-
   }
 
   getVw() {
     return this.vw;
   }
+
   getVh() {
     return this.vh;
   }
@@ -198,48 +191,31 @@ console.log("bgBoardConfig", this.mainBoardWidth, this.vw, this.pointWidth);
     //上記マジックナンバーは、cssの .pool の真ん中を返すよう設定 3vw = 7vw/2, 15vh = 30vh/2
   }
 
-
-  getDragEndPoint(pos, player) {
-    const ptt = Math.floor((pos.left - 8 * this.vw) / this.pointWidth + 0.5);
-    const py = Math.floor(pos.top + 20);
-    let pt;
-    if (ptt <=  0) { pt = 14; }
-    else if (ptt >= 13) { pt = 15; }
-    else if (ptt >=1 && ptt <= 12) { pt = (player == 1) ? ptt : 13 - ptt; }
-    else { pt = 99; }
-    const ph = (ptt >= 1 && ptt <= 12) ? this.pointHeight : this.boffHeight;
-
-    let ret;
-    if (pt < 0 || pt > 15) { ret = 999; }
-    if (py >= this.pointY[pt] && py < this.pointY[pt] + ph) {
-      ret = pt;
-    } else {
-      ret = 99;
-    }
-console.log("getDragEndPoint", pos, ph, py, pt, player, pt, ret);
-    return ret;
-//    if (pt < 0 || pt > 13) { return 99; }
-//    return (py >= this.pointY[pt] && py < this.pointY[pt] + ph) ? pt : 99;
-  }
-
   getDragStartPoint(id, player) {
     const chker = this.chequer[player].find(elem => elem.domid == id);
     const pt = chker.point;
     const p = (player == 1) ? pt : 13 - pt;
-console.log("getDragStartPoint", id, player, pt, p);
     return p;
   }
 
-  getChequerOnDragging(pt, player) {
-    const chker = this.chequer[player].find(elem => elem.point == pt);
-console.log("getChequerOnDragging", pt, player, chker);
-    return chker;
+  getDragEndPoint(pos, player) {
+    const ptt = Math.floor((pos.left - 8 * this.vw) / this.pointWidth + 0.5);
+    const py = Math.floor(pos.top + 20);
+    let pt, returnpt;
+    if (ptt >=1 && ptt <= 12) { pt = ptt; returnpt = (player == 1) ? ptt : 13 - ptt; }
+    else if (ptt <=  0) { pt = 14; returnpt = 0;}
+    else if (ptt >= 13) { pt = 15; returnpt = 0;}
+
+    const ph = (pt >= 1 && pt <= 12) ? this.pointHeight : this.boffHeight;
+    if (py < this.pointY[pt] || py > this.pointY[pt] + ph) {
+      returnpt = 99;
+    }
+    return returnpt;
   }
 
   getChequerHitted(ptt, player) {
     const pt = (player == 1) ? 13 - ptt : ptt;
     const chker = this.chequer[player].find(elem => elem.point == pt);
-console.log("getOppoChequerAndGotoBar", ptt, pt, player, chker);
     return chker;
   }
 

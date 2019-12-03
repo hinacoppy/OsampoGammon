@@ -11,8 +11,6 @@ class OsgGame {
     this.setDomNames();
     this.setEventHandler();
     this.setChequerDraggable();
-    this.flashflg = true;
-    this.outerDragFlag = false; //駒でない部分をタップしてドラッグを始めたら true
     this.beginNewGame(); //新規ゲームを始める
   } //end of constructor()
 
@@ -25,24 +23,23 @@ class OsgGame {
     this.newgamebtn  = $("#newgamebtn");
     this.cancelbtn   = $("#cancelbtn");
     this.openrollbtn = $("#openingroll");
-    this.nextgamebtn  = $("#nextgamebtn");
+    this.nextgamebtn = $("#nextgamebtn");
     this.settingbtn  = $("#settingbtn");
-    this.pointTriangle = $(".point");
-
-    //panel
-    this.panelholder  = $("#panelholder");
-    this.allpanel     = $(".panel,#undobtn,#donebtn,#rollbtn");
-    this.youfirst     = $("#youfirst");
-    this.doneundo     = $("#doneundo");
-    this.gameend      = $("#gameend");
-    this.splash       = $("#splash");
-    this.hideAllPanel(); //font awesome が描画するのを待つ必要がある
-    this.panelholder.show();
-    //settings and valiables
-    this.settings    = $("#settings");
+    this.allactionbtn= $("#undobtn,#donebtn,#rollbtn");
 
     //chequer
-    this.chequerall = $(".chequer");
+    this.chequerall  = $(".chequer");
+
+    //panel
+    this.panelholder = $("#panelholder");
+    this.allpanel    = $(".panel,#undobtn,#donebtn,#rollbtn");
+    this.splash      = $("#splash");
+    this.youfirst    = $("#youfirst");
+    this.gameend     = $("#gameend");
+    this.settings    = $("#settings");
+
+    this.hideAllPanel(); //font awesome が描画するのを待つ必要がある
+    this.panelholder.show();
   }
 
   setEventHandler() {
@@ -54,7 +51,11 @@ class OsgGame {
     this.nextgamebtn.on('click', () => { this.nextGameAction(); });
 
     //設定画面
-    this.settingbtn.on('click', () => { this.settings.slideToggle("normal"); });
+    const yy = this.settingbtn.height();
+    this.settingbtn.on('click', () => {
+//      this.settings.css({left:0, top:yy});
+      this.settings.css({left:0, top:yy}).slideToggle("normal");
+    });
     this.resignbtn. on('click', () => { //for DEBUG
       this.settings.slideToggle("normal");
       this.swapTurn();
@@ -67,57 +68,53 @@ class OsgGame {
   }
 
   beginNewGame() {
-//  const initpos = "-b-C--cC--c-B-";
-    const initpos = "---ccbBBD-----";
-    this.osgid.initialize(initpos);
-    this.board.showBoard2(this.osgid);
+    const osgidstr = "OSGID=-b-C--cC--c-B-:0:00:0:0:0";
+//    const osgidstr = "OSGID=----ccbBBD----:0:00:0:0:0";
+    this.osgid = new OsgID(osgidstr);
+    this.board.showBoard(this.osgid);
     this.swapChequerDraggable(true, true);
     this.hideAllPanel();
     this.showOpenRollPanel();
-console.log("beginNewGame", this.osgid.osgidstr);
   }
 
   async rollAction(openroll = false) {
     this.hideAllPanel();
     this.undoStack = [];
-    const dice = this.randomdice(openroll);
+    const dice = OsgUtil.randomdice3(openroll);
     this.osgid.dice = dice[2];
     this.osgid.usabledice = true;
     this.board.animateDice(800);
-    this.board.showBoard2(this.osgid);
+    this.board.showBoard(this.osgid);
     if (openroll) {
       this.player = (dice[0] > dice[1]);
       this.osgid.turn = OsgUtil.cvtTurnGm2Xg(this.player);
       this.showYouFirstPanel(this.player);
-      OsgUtil.sleep(2000);
+      await OsgUtil.sleep(1000);
       this.youfirst.fadeOut(1500);
     }
-console.log("rollAction", openroll, this.player, this.osgid.dice, this.osgid.osgidstr);
     this.swapChequerDraggable(this.player);
-    this.pushXgidPosition();
-    this.showDoneUndoPanel(this.player, openroll);
+    this.pushOsgidPosition();
+    this.showDoneUndoPanel(this.player);
   }
 
   undoAction() {
     //ムーブ前のボードを再表示
     if (this.undoStack.length > 0) {
-      const osgidstr = this.popXgidPosition();
+      const osgidstr = this.popOsgidPosition();
       this.osgid = new OsgID(osgidstr);
       this.osgid.usabledice = true;
-      this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
-      this.pushXgidPosition();
-console.log("undoAction", osgidstr);
-      this.board.showBoard2(this.osgid);
+      this.donebtn.prop("disabled", !this.osgid.moveFinished() );
+      this.pushOsgidPosition();
+      this.board.showBoard(this.osgid);
     }
   }
 
   doneAction() {
-console.log("doneAction");
     this.hideAllPanel();
     this.swapTurn();
     this.osgid.dice = "00";
     this.osgid.turn = OsgUtil.cvtTurnGm2Xg(this.player);
-    this.board.showBoard2(this.osgid);
+    this.board.showBoard(this.osgid);
     this.swapChequerDraggable(true, true);
     this.showRollPanel(this.player);
   }
@@ -127,33 +124,18 @@ console.log("doneAction");
   }
 
   bearoffAllAction() {
-console.log("bearoffAllAction");
+    this.disableAllActionButton();
     this.showGameEndPanel(this.player);
   }
 
-  randomdice(openroll = false) {
-    const random3 = (() => Math.floor( Math.random() * 3 ) + 1);
-    const d1 = random3();
-    let   d2 = random3();
-    if (openroll) { //オープニングロールでは同じ目を出さない
-      while (d1 == d2) {
-        d2 = random3();
-      }
-    }
-    const dicestr = String(d1) + String(d2);
-    return [d1, d2, dicestr];
-  }
-
   showRollPanel(player) {
-console.log("showRollPanel", player);
+    this.rollbtn.prop("disabled", false);
     this.showElement(this.rollbtn, player);
   }
 
-  showDoneUndoPanel(player, opening = false) {
-const moveFinished = this.osgid.moveFinished();
-    this.donebtn.prop("disabled", (!moveFinished && this.flashflg) );
-//    this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
-console.log("showDoneUndoPanel", player, moveFinished , this.flashflg);
+  showDoneUndoPanel(player) {
+    this.undobtn.prop("disabled", false);
+    this.donebtn.prop("disabled", !this.osgid.moveFinished() );
     this.showElement(this.donebtn, player);
     this.showElement(this.undobtn, player);
   }
@@ -174,10 +156,13 @@ console.log("showDoneUndoPanel", player, moveFinished , this.flashflg);
     this.allpanel.hide();
   }
 
+  disableAllActionButton() {
+    this.allactionbtn.prop("disabled", true);
+  }
+
   showElement(elem, player, pos) {
     const postision = this.calcElementPosition(elem, player, pos);
-    elem.show().toggleClass('turn1', player).toggleClass('turn2', !player)
-        .css(postision);
+    elem.show().toggleClass('turn1', player).toggleClass('turn2', !player).css(postision);
   }
 
   calcElementPosition(elem, player, pos = null) {
@@ -200,22 +185,16 @@ console.log("showDoneUndoPanel", player, moveFinished , this.flashflg);
     return {left:wx, top:wy};
   }
 
-  pushXgidPosition() {
-console.log("pushXgidPosition", this.osgid.osgidstr);
+  pushOsgidPosition() {
    this.undoStack.push(this.osgid.osgidstr);
   }
-  popXgidPosition() {
-    const r = this.undoStack.pop();
-console.log("popXgidPosition", r);
-    return r;
-  }
 
+  popOsgidPosition() {
+    return this.undoStack.pop();
+  }
 
   swapTurn() {
     this.player = !this.player;
-  }
-  swapXgTurn() {
-    this.osgid.turn = -1 * this.osgid.turn;
   }
 
   setChequerDraggable() {
@@ -227,7 +206,6 @@ console.log("popXgidPosition", r);
       containment: 'parent',
       opacity: 0.6,
       zIndex: 99,
-      //revertDuration: 200
     });
   }
 
@@ -235,20 +213,16 @@ console.log("popXgidPosition", r);
     this.dragObject = $(event.currentTarget);
     const id = this.dragObject.attr("id");
     this.dragStartPt = this.board.getDragStartPoint(id, OsgUtil.cvtTurnGm2Bd(this.player));
-    if (!this.outerDragFlag) { this.dragStartPos = ui.position; }
-    this.outerDragFlag = false;
+    this.dragStartPos = ui.position;
     this.flashOnMovablePoint(this.dragStartPt);
-console.log("dragStart", this.dragStartPt, this.dragObject, event);
   }
 
   dragStopAction(event, ui) {
     this.flashOffMovablePoint();
-    const pt = this.board.getDragEndPoint(ui.position, OsgUtil.cvtTurnGm2Bd(this.player));
-    this.dragEndPt = (pt == 14 || pt == 15) ? 0 : pt;
-    const xg = this.osgid;
-    const ok = xg.isMovable(this.dragStartPt, this.dragEndPt, this.flashflg);
-    const hit = xg.isHitted(this.dragEndPt);
-console.log("dragStopOK?", ok, hit, this.dragStartPt, pt, this.dragEndPt);
+    this.dragEndPt = this.board.getDragEndPoint(ui.position, OsgUtil.cvtTurnGm2Bd(this.player));
+    const ok = this.osgid.isMovable(this.dragStartPt, this.dragEndPt);
+    const hit = this.osgid.isHitted(this.dragEndPt);
+//console.log("dragStopOK?", ok, hit, this.dragStartPt, this.dragEndPt);
 
     if (ok) {
       if (hit) {
@@ -258,23 +232,20 @@ console.log("dragStopOK?", ok, hit, this.dragStartPt, pt, this.dragEndPt);
         const oppoChequer = this.board.getChequerHitted(this.dragEndPt, oppoplayer);
         const barPt = this.board.getBarPos(oppoplayer);
         if (oppoChequer) {
-          oppoChequer.dom.animate(barPt, 300, () => { this.board.showBoard2(this.osgid); });
+          oppoChequer.dom.animate(barPt, 300, () => { this.board.showBoard(this.osgid); });
         }
-console.log("dragStopHIT", movestr, this.osgid.osgidstr);
+//console.log("dragStopHIT", movestr, this.osgid.osgidstr);
       }
       const movestr = this.dragStartPt + "/" + this.dragEndPt;
       this.osgid = this.osgid.moveChequer(movestr);
-console.log("dragStopOK ", movestr, this.osgid.osgidstr);
+//console.log("dragStopOK ", movestr, this.osgid.osgidstr);
       if (!hit) {
-        this.board.showBoard2(this.osgid);
+        this.board.showBoard(this.osgid);
       }
     } else {
       this.dragObject.animate(this.dragStartPos, 300);
     }
-const f = this.osgid.moveFinished();
-console.log("dragStop button", f , this.flashflg);
-//    this.donebtn.prop("disabled", (!this.osgid.moveFinished() && this.flashflg) );
-    this.donebtn.prop("disabled", (!f && this.flashflg) );
+    this.donebtn.prop("disabled", !this.osgid.moveFinished() );
     const turn = OsgUtil.cvtTurnGm2Xg(this.player);
     if (this.osgid.get_boff(turn) == 8) { this.bearoffAllAction(); }
   }
@@ -282,19 +253,18 @@ console.log("dragStop button", f , this.flashflg);
   swapChequerDraggable(player, init = false) {
     this.chequerall.draggable({disabled: true});
     if (init) { return; }
-    const plyr = OsgUtil.cvtTurnGm2Bd(player);
-console.log("swapChequerDraggable",player, plyr, this.board.chequer[plyr]);
+    const gmplayer = OsgUtil.cvtTurnGm2Bd(player);
     for (let i = 0; i < 8; i++) {
-      const pt = this.board.chequer[plyr][i].point;
+      const pt = this.board.chequer[gmplayer][i].point;
       if (pt == 15 || pt == 16) { continue; }
-      this.board.chequer[plyr][i].dom.draggable({disabled: false});
+      this.board.chequer[gmplayer][i].dom.draggable({disabled: false});
     }
   }
 
   flashOnMovablePoint(startpt) {
-    if (this.flashflg) {
+    if (true) {
       let dest2 = [];
-      const destpt = this.osgid.movablePoint(this.dragStartPt, this.flashflg);
+      const destpt = this.osgid.movablePoint(this.dragStartPt);
       for (const p of destpt) {
         let pt;
         if (this.player) { 
@@ -304,39 +274,12 @@ console.log("swapChequerDraggable",player, plyr, this.board.chequer[plyr]);
         }
         dest2.push(pt);
       }
-console.log("flashOnMovablePoint", startpt, destpt, dest2);
       this.board.flashOnMovablePoint(dest2, OsgUtil.cvtTurnGm2Bd(this.player));
     }
   }
+
   flashOffMovablePoint() {
     this.board.flashOffMovablePoint();
   }
 
-/**********************************************
-  pointTouchEndAction() {
-//    this.flashOffMovablePoint();
-  }
-
-  pointTouchStartAction(event) {
-    const id = event.currentTarget.id;
-    const pt = parseInt(id.substr(2));
-    const chker = this.board.getChequerOnDragging(pt, OsgUtil.cvtTurnGm2Bd(this.player));
-console.log("pointTouchStartAction", id, pt, chker);
-
-    if (chker) { //chker may be undefined
-      const chkerdom = chker.dom;
-      if (chkerdom.data('ui-draggable')) {
-        this.dragStartPos = chker.position;
-        this.outerDragFlag = true;
-        const xx = event.pageX - 30;
-        const yy = event.pageY - 30;
-        chkerdom.css({left: xx, top: yy});
-        event.type = "mousedown.draggable";
-        event.target = chkerdom;
-        chkerdom.trigger(e);
-console.log("pointTouchStartAction", chkerdom);
-      }
-    }
-  }
-*****************************************/
 } //end of class OsgGame
