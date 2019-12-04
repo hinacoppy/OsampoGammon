@@ -7,10 +7,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
   <meta name="description" content="Osampo Gammon App">
   <meta name="author" content="(C)hinacoppy 2019">
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/OsampoGammon.css">
   <link rel="stylesheet" href="css/font-awesome-animation.min.css">
-  <link rel="icon" href="./favicon.ico">
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="icon" href="icon/favicon.ico">
+  <link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
   <title>OsampoGammon</title>
 </head>
 <body class="container">
@@ -105,6 +106,16 @@
 <script src="js/OsgID_class.js"></script>
 <script src="js/OsgUtil_class.js"></script>
 <script src="js/OsgGame_class.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register("./serviceWorker.js")
+      .then(function(registration) {
+        console.log("serviceWorker registed.");
+      }).catch(function(error) {
+        console.warn("serviceWorker error.", error);
+      });
+  }
+</script>
 <script>
 if (OsgUtil.isIOS()) {
   iNoBounce.enable();
