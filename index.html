@@ -99,7 +99,6 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/jquery.ui.touch-punch.min.js"></script>
-<!-- <script src="js/jquery.mobile-events.min.js"></script> -->
 <script src="js/inobounce.min.js"></script>
 <script src="js/OsgBoard_class.js"></script>
 <script src="js/OsgChequer_class.js"></script>
@@ -107,16 +106,15 @@
 <script src="js/OsgUtil_class.js"></script>
 <script src="js/OsgGame_class.js"></script>
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("./serviceWorker.js")
-      .then(function(registration) {
-        console.log("serviceWorker registed.");
-      }).catch(function(error) {
-        console.warn("serviceWorker error.", error);
-      });
-  }
-</script>
-<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register("./serviceWorker.js")
+    .then(function(registration) {
+      console.log("serviceWorker registed.");
+    }).catch(function(error) {
+      console.warn("serviceWorker error.", error);
+    });
+}
+
 if (OsgUtil.isIOS()) {
   iNoBounce.enable();
 }
