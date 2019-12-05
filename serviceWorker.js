@@ -1,5 +1,5 @@
 /* serviceWorker.js */
-// (Ql) https://qiita.com/kaihar4/items/c09a6d73e190ab0b9b01
+// (å‚è€ƒ) https://qiita.com/kaihar4/items/c09a6d73e190ab0b9b01
 'use strict';
 
 const CACHE_NAME = "Osampo-v1";
