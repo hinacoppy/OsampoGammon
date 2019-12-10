@@ -3,7 +3,7 @@
   "short_name": "OsampoGammon",
   "start_url": "/OsampoGammon/index.html",
   "scope": "/OsampoGammon/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#fff",
   "theme_color": "#fff",
   "description": "おさんぽギャモンアプリ",
