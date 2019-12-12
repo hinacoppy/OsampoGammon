@@ -105,16 +105,8 @@
 <script src="js/OsgID_class.js"></script>
 <script src="js/OsgUtil_class.js"></script>
 <script src="js/OsgGame_class.js"></script>
+<script src="js/start-serviceWorker.js"></script>
 <script>
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("./serviceWorker.js")
-    .then(function(registration) {
-      registration.update();
-    }).catch(function(error) {
-      console.warn("serviceWorker error.", error);
-    });
-}
-
 if (OsgUtil.isIOS()) {
   iNoBounce.enable();
 }
