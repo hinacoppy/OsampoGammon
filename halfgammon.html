@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="description" content="Half Gammon App">
+  <meta name="author" content="(C)hinacoppy 2019">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/OsampoGammon.css">
+  <link rel="stylesheet" href="css/font-awesome-animation.min.css">
+  <link rel="icon" href="icon/favicon.ico">
+  <link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
+  <title>HalfGammon</title>
+</head>
+<body class="container">
+<section id="board" class="boardarea">
+<div id="pt0"  class="pool player2base"></div>
+<div id="pt1"  class="point player1base"></div>
+<div id="pt2"  class="point player1base"></div>
+<div id="pt3"  class="point player1base"></div>
+<div id="pt4"  class="point"></div>
+<div id="pt5"  class="point"></div>
+<div id="pt6"  class="point"></div>
+<div id="pt7"  class="point"></div>
+<div id="pt8"  class="point"></div>
+<div id="pt9"  class="point"></div>
+<div id="pt10" class="point player2base"></div>
+<div id="pt11" class="point player2base"></div>
+<div id="pt12" class="point player2base"></div>
+<div id="pt13" class="pool player1base"></div>
+<div id="pt14" class="goal player1base"></div>
+<div id="pt15" class="goal player2base"></div>
+<div id="dicepool1" class="dicepool player1base"></div>
+<div id="dicepool2" class="dicepool player2base"></div>
+<span id="dice10" class="dice player1col"><i class="diceface fas"></i></span>
+<span id="dice11" class="dice player1col"><i class="diceface fas"></i></span>
+<span id="dice20" class="dice player2col"><i class="diceface fas"></i></span>
+<span id="dice21" class="dice player2col"><i class="diceface fas"></i></span>
+<span id="cw0" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw1" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw2" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw3" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw4" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw5" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw6" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cw7" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#fcc"></i>
+<i class="player1col fas fa-arrow-alt-circle-left"  data-fa-transform="shrink-1"></i></span>
+<span id="cb0" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb1" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb2" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb3" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb4" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb5" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb6" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+<span id="cb7" class="chequer fa-layers fa-fw"><i class="fas fa-circle" style="color:#ccf"></i>
+<i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
+</section>
+
+<section id="panelholder" style="display:none">
+<div id="splash" class="splash panel">
+<p class="mes1">Half Gammon</p>
+<button id="openingroll" class="oparationbtn" style="position:relative;"><i class="fas fa-dice"></i> Start Game</button>
+</div>
+<div id="gameend" class="panel">
+<p class="mes1">You WIN</p>
+<button id="nextgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> Play Again</button>
+</div>
+<div id="youfirst" class="panel">
+<p class="mes1">You First</p>
+</div>
+<button id="rollbtn" class="oparationbtn"><i class="fas fa-dice"></i> Roll Dice</button>
+<button id="donebtn" class="oparationbtn"><i class="fas fa-check-circle"></i> Done</button>
+<button id="undobtn" class="oparationbtn"><i class="fas fa-undo"></i> Undo</button>
+</section>
+
+<button id="settingbtn" class="oparationbtn"><i class="fas fa-bars"></i></button>
+<aside id="settings" class="settings">
+<button id="newgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> Begin New Game</button><br>
+<!-- <button id="resignbtn" class="oparationbtn" style="position:relative;"><i class="fas fa-flag"></i> Resign(for Debug)</button> -->
+</aside>
+
+<script src="js/fontawesome-all.min.js" defer></script>
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/inobounce.min.js"></script>
+<script src="js/OsgBoard_class.js"></script>
+<script src="js/OsgChequer_class.js"></script>
+<script src="js/OsgID_class.js"></script>
+<script src="js/OsgUtil_class.js"></script>
+<script src="js/OsgGame_class.js"></script>
+<script src="js/start-serviceWorker.js"></script>
+<script>
+if (OsgUtil.isIOS()) {
+  iNoBounce.enable();
+}
+var osampoGammon = new OsgGame();
+</script>
+</body>
+</html>
