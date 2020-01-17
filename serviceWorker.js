@@ -15,17 +15,17 @@ const STATIC_FILES = [
   ORIGIN + '/OsampoGammon/icon/android-chrome-192x192.png',
   ORIGIN + '/OsampoGammon/icon/android-chrome-512x512.png',
   ORIGIN + '/OsampoGammon/css/OsampoGammon.css',
-  ORIGIN + '/OsampoGammon/css/font-awesome-animation.min.css',
-  ORIGIN + '/OsampoGammon/js/fontawesome-all.min.js',
-  ORIGIN + '/OsampoGammon/js/jquery-3.4.1.min.js',
-  ORIGIN + '/OsampoGammon/js/jquery-ui.min.js',
-  ORIGIN + '/OsampoGammon/js/jquery.ui.touch-punch.min.js',
-  ORIGIN + '/OsampoGammon/js/inobounce.min.js',
+  ORIGIN + '/css/font-awesome-animation.min.css',
   ORIGIN + '/OsampoGammon/js/OsgBoard_class.js',
   ORIGIN + '/OsampoGammon/js/OsgChequer_class.js',
   ORIGIN + '/OsampoGammon/js/OsgID_class.js',
   ORIGIN + '/OsampoGammon/js/OsgUtil_class.js',
   ORIGIN + '/OsampoGammon/js/OsgGame_class.js'
+  ORIGIN + '/js/fontawesome-all.min.js',
+  ORIGIN + '/js/jquery-3.4.1.min.js',
+  ORIGIN + '/js/jquery-ui.min.js',
+  ORIGIN + '/js/jquery.ui.touch-punch.min.js',
+  ORIGIN + '/js/inobounce.min.js',
 ];
 
 const CACHE_KEYS = [
