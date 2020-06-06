@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
   <meta name="description" content="Osampo Gammon App">
-  <meta name="author" content="(C)hinacoppy 2019">
+  <meta name="author" content="(C)hinacoppy 2019 - 2020">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/OsampoGammon.css">
   <link rel="stylesheet" href="/css/font-awesome-animation.min.css">
@@ -84,6 +84,9 @@
 <div id="youfirst" class="panel">
 <p class="mes1">あなたが先攻です</p>
 </div>
+<div id="cannotmove" class="panel">
+<p class="mes1">動かせません</p>
+</div>
 <button id="rollbtn" class="oparationbtn"><i class="fas fa-dice"></i> サイコロを振る</button>
 <button id="donebtn" class="oparationbtn"><i class="fas fa-check-circle"></i> 動かし終わり</button>
 <button id="undobtn" class="oparationbtn"><i class="fas fa-undo"></i> 元に戻す</button>
@@ -91,14 +94,12 @@
 
 <button id="settingbtn" class="oparationbtn"><i class="fas fa-bars"></i></button>
 <aside id="settings" class="settings">
-<button id="newgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> 新しいゲームを始める</button><br>
-<button id="resignbtn" class="oparationbtn" style="position:relative;"><i class="fas fa-flag"></i> Resign(for Debug)</button>
+<button id="newgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> 新しいゲーム</button><br>
+<button id="resignbtn" class="oparationbtn" style="position:relative;"><i class="fas fa-flag"></i> 降参(for Debug)</button>
 </aside>
 
 <script src="/js/fontawesome-all.min.js" defer></script>
 <script src="/js/jquery-3.4.1.min.js"></script>
-<script src="/js/jquery-ui.min.js"></script>
-<script src="/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/js/inobounce.min.js"></script>
 <script src="js/OsgBoard_class.js"></script>
 <script src="js/OsgChequer_class.js"></script>

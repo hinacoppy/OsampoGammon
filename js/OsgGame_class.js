@@ -36,6 +36,7 @@ class OsgGame {
     this.splash      = $("#splash");
     this.youfirst    = $("#youfirst");
     this.gameend     = $("#gameend");
+    this.cannotmove  = $("#cannotmove");
     this.settings    = $("#settings");
 
     this.hideAllPanel(); //font awesome が描画するのを待つ必要がある
@@ -53,7 +54,6 @@ class OsgGame {
     //設定画面
     const yy = this.settingbtn.height();
     this.settingbtn.on('click', () => {
-//      this.settings.css({left:0, top:yy});
       this.settings.css({left:0, top:yy}).slideToggle("normal");
     });
     this.resignbtn. on('click', () => { //for DEBUG
@@ -69,7 +69,6 @@ class OsgGame {
 
   beginNewGame() {
     const osgidstr = "OSGID=-b-C--cC--c-B-:0:00:0:0:0";
-//    const osgidstr = "OSGID=----ccbBBD----:0:00:0:0:0";
     this.osgid = new OsgID(osgidstr);
     this.board.showBoard(this.osgid);
     this.swapChequerDraggable(true, true);
@@ -94,6 +93,12 @@ class OsgGame {
     }
     this.swapChequerDraggable(this.player);
     this.pushOsgidPosition();
+    if (this.osgid.moveFinished()) { //ロール後全く動かせないとき
+      await OsgUtil.sleep(1000); //ダイスアニメーションを待ってダイアログを表示
+      this.showCannotMovePanel(this.player);
+      await OsgUtil.sleep(1000);
+      this.cannotmove.fadeOut(1500);
+    }
     this.showDoneUndoPanel(this.player);
   }
 
@@ -106,6 +111,7 @@ class OsgGame {
       this.donebtn.prop("disabled", !this.osgid.moveFinished() );
       this.pushOsgidPosition();
       this.board.showBoard(this.osgid);
+      this.swapChequerDraggable(this.player);
     }
   }
 
@@ -150,6 +156,10 @@ class OsgGame {
 
   showYouFirstPanel(player) {
     this.showElement(this.youfirst, player, true);
+  }
+
+  showCannotMovePanel(player) {
+    this.showElement(this.cannotmove, player, true);
   }
 
   hideAllPanel() {
@@ -198,20 +208,85 @@ class OsgGame {
   }
 
   setChequerDraggable() {
-    this.chequerall.draggable({
-      //event
-      start: ( event, ui ) => { this.dragStartAction(event, ui); },
-      stop:  ( event, ui ) => { this.dragStopAction(event, ui); },
-      //options
-      containment: 'parent',
-      opacity: 0.6,
-      zIndex: 99,
+    //関数内広域変数
+    var x; //要素内のクリックされた位置
+    var y;
+    var dragobj; //ドラッグ中のオブジェクト
+
+    //この関数内の処理は、パフォーマンスのため jQuery Free で記述
+
+    //ドラッグ開始時のコールバック関数
+    const evfn_dragstart = ((e) => {
+      dragobj = e.currentTarget; //dragする要素を取得し、広域変数に格納
+      if (!dragobj.classList.contains("draggable")) { return; } //draggableでないオブジェクトは無視
+
+      dragobj.classList.add("dragging"); //drag中フラグ(クラス追加/削除で制御)
+      dragobj.style.zIndex = 999;
+
+      //マウスイベントとタッチイベントの差異を吸収
+      const event = (e.type === "mousedown") ? e : e.changedTouches[0];
+
+      //要素内の相対座標を取得
+      x = event.pageX - dragobj.offsetLeft;
+      y = event.pageY - dragobj.offsetTop;
+
+      //イベントハンドラを登録
+      document.body.addEventListener("mousemove",  evfn_drag,    false);
+      document.body.addEventListener("mouseleave", evfn_dragend, false);
+      dragobj.      addEventListener("mouseup",    evfn_dragend, false);
+      document.body.addEventListener("touchmove",  evfn_drag,    false);
+      document.body.addEventListener("touchleave", evfn_dragend, false);
+      dragobj.      addEventListener("touchend",   evfn_dragend, false);
+
+      const ui = {position: { //dragStartAction()に渡すオブジェクトを作る
+                   left: dragobj.offsetLeft,
+                   top:  dragobj.offsetTop
+                 }};
+      this.dragStartAction(event, ui);
     });
+
+    //ドラッグ中のコールバック関数
+    const evfn_drag = ((e) => {
+      e.preventDefault(); //フリックしたときに画面を動かさないようにデフォルト動作を抑制
+
+      //マウスイベントとタッチイベントの差異を吸収
+      const event = (e.type === "mousemove") ? e : e.changedTouches[0];
+
+      //マウスが動いた場所に要素を動かす
+      dragobj.style.top  = event.pageY - y + "px";
+      dragobj.style.left = event.pageX - x + "px";
+    });
+
+    //ドラッグ終了時のコールバック関数
+    const evfn_dragend = ((e) => {
+      dragobj.classList.remove("dragging"); //drag中フラグを削除
+      dragobj.style.zIndex = null;
+
+      //イベントハンドラの削除
+      document.body.removeEventListener("mousemove",  evfn_drag,    false);
+      document.body.removeEventListener("mouseleave", evfn_dragend, false);
+      dragobj.      removeEventListener("mouseup",    evfn_dragend, false);
+      document.body.removeEventListener("touchmove",  evfn_drag,    false);
+      document.body.removeEventListener("touchleave", evfn_dragend, false);
+      dragobj.      removeEventListener("touchend",   evfn_dragend, false);
+
+      const ui = {position: { //dragStopAction()に渡すオブジェクトを作る
+                   left: dragobj.offsetLeft,
+                   top:  dragobj.offsetTop
+                 }};
+      this.dragStopAction(e, ui);
+    });
+
+    //dragできるオブジェクトにdragstartイベントを設定
+    for(const elm of this.chequerall) {
+      elm.addEventListener("mousedown",  evfn_dragstart, false);
+      elm.addEventListener("touchstart", evfn_dragstart, false);
+    }
   }
 
   dragStartAction(event, ui) {
-    this.dragObject = $(event.currentTarget);
-    const id = this.dragObject.attr("id");
+    this.dragObject = $(event.currentTarget); //dragStopAction()で使うがここで取り出しておかなければならない
+    const id = event.currentTarget.id;
     this.dragStartPt = this.board.getDragStartPoint(id, OsgUtil.cvtTurnGm2Bd(this.player));
     this.dragStartPos = ui.position;
     this.flashOnMovablePoint(this.dragStartPt);
@@ -222,7 +297,6 @@ class OsgGame {
     this.dragEndPt = this.board.getDragEndPoint(ui.position, OsgUtil.cvtTurnGm2Bd(this.player));
     const ok = this.osgid.isMovable(this.dragStartPt, this.dragEndPt);
     const hit = this.osgid.isHitted(this.dragEndPt);
-//console.log("dragStopOK?", ok, hit, this.dragStartPt, this.dragEndPt);
 
     if (ok) {
       if (hit) {
@@ -234,11 +308,9 @@ class OsgGame {
         if (oppoChequer) {
           oppoChequer.dom.animate(barPt, 300, () => { this.board.showBoard(this.osgid); });
         }
-//console.log("dragStopHIT", movestr, this.osgid.osgidstr);
       }
       const movestr = this.dragStartPt + "/" + this.dragEndPt;
       this.osgid = this.osgid.moveChequer(movestr);
-//console.log("dragStopOK ", movestr, this.osgid.osgidstr);
       if (!hit) {
         this.board.showBoard(this.osgid);
       }
@@ -251,13 +323,13 @@ class OsgGame {
   }
 
   swapChequerDraggable(player, init = false) {
-    this.chequerall.draggable({disabled: true});
+    this.chequerall.removeClass("draggable");
     if (init) { return; }
     const gmplayer = OsgUtil.cvtTurnGm2Bd(player);
     for (let i = 0; i < 8; i++) {
       const pt = this.board.chequer[gmplayer][i].point;
       if (pt == 15 || pt == 16) { continue; }
-      this.board.chequer[gmplayer][i].dom.draggable({disabled: false});
+      this.board.chequer[gmplayer][i].dom.addClass("draggable");
     }
   }
 
