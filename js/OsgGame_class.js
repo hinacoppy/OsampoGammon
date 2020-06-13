@@ -44,24 +44,28 @@ class OsgGame {
   }
 
   setEventHandler() {
+    const clickEventType = 'click touchstart'; //(( window.ontouchstart !== null ) ? 'click':'touchstart');
     //Button Click Event
-    this.openrollbtn.on('click', () => { this.rollAction(true); });
-    this.rollbtn.    on('click', () => { this.rollAction(false); });
-    this.donebtn.    on('click', () => { this.doneAction(); });
-    this.undobtn.    on('click', () => { this.undoAction(); });
-    this.nextgamebtn.on('click', () => { this.nextGameAction(); });
+    this.openrollbtn.on(clickEventType, (e) => { e.preventDefault(); this.rollAction(true); });
+    this.rollbtn.    on(clickEventType, (e) => { e.preventDefault(); this.rollAction(false); });
+    this.donebtn.    on(clickEventType, (e) => { e.preventDefault(); this.doneAction(); });
+    this.undobtn.    on(clickEventType, (e) => { e.preventDefault(); this.undoAction(); });
+    this.nextgamebtn.on(clickEventType, (e) => { e.preventDefault(); this.nextGameAction(); });
 
     //設定画面
-    const yy = this.settingbtn.height();
-    this.settingbtn.on('click', () => {
+    this.settingbtn.on(clickEventType, (e) => {
+      e.preventDefault();
+      const yy = this.settingbtn.height();
       this.settings.css({left:0, top:yy}).slideToggle("normal");
     });
-    this.resignbtn. on('click', () => { //for DEBUG
+    this.resignbtn. on(clickEventType, (e) => { //for DEBUG
+      e.preventDefault();
       this.settings.slideToggle("normal");
       this.swapTurn();
       this.bearoffAllAction();
     });
-    this.newgamebtn.on('click', () => {
+    this.newgamebtn.on(clickEventType, (e) => {
+      e.preventDefault();
       this.settings.slideToggle("normal"); //画面を消す
       this.nextGameAction();
     });
@@ -116,6 +120,7 @@ class OsgGame {
   }
 
   doneAction() {
+    if (this.donebtn.prop("disabled")) { return; }
     this.hideAllPanel();
     this.swapTurn();
     this.osgid.dice = "00";

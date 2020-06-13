@@ -2,7 +2,7 @@
 // (参考) https://qiita.com/kaihar4/items/c09a6d73e190ab0b9b01
 'use strict';
 
-const CACHE_NAME = "Osampo-v2"; //v1=first release, v2=no use jquery.ui
+const CACHE_NAME = "Osampo-v2.1"; //v1=first release, v2=no use jquery.ui
 const ORIGIN = (location.hostname == 'localhost') ? '' : location.protocol + '//' + location.hostname;
 
 const STATIC_FILES = [
@@ -20,10 +20,10 @@ const STATIC_FILES = [
   ORIGIN + '/OsampoGammon/js/OsgChequer_class.js',
   ORIGIN + '/OsampoGammon/js/OsgID_class.js',
   ORIGIN + '/OsampoGammon/js/OsgUtil_class.js',
-  ORIGIN + '/OsampoGammon/js/OsgGame_class.js'
+  ORIGIN + '/OsampoGammon/js/OsgGame_class.js',
   ORIGIN + '/js/fontawesome-all.min.js',
   ORIGIN + '/js/jquery-3.4.1.min.js',
-  ORIGIN + '/js/inobounce.min.js',
+  ORIGIN + '/js/inobounce.min.js'
 ];
 
 const CACHE_KEYS = [
