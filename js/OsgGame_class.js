@@ -102,6 +102,8 @@ class OsgGame {
       this.showCannotMovePanel(this.player);
       await OsgUtil.sleep(1000);
       this.cannotmove.fadeOut(1500);
+      this.doneAction(); //「動かし終わり」のボタンを勝手にクリック
+      return;
     }
     this.showDoneUndoPanel(this.player);
   }
@@ -327,6 +329,7 @@ class OsgGame {
     } else {
       this.dragObject.animate(this.dragStartPos, 300);
     }
+    this.swapChequerDraggable(this.player);
     this.donebtn.prop("disabled", !this.osgid.moveFinished() );
     const turn = OsgUtil.cvtTurnGm2Xg(this.player);
     if (this.osgid.get_boff(turn) == 8) { this.bearoffAllAction(); }
