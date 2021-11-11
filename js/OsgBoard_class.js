@@ -97,7 +97,6 @@ class OsgBoard {
     for (let player = 1; player <= 2; player++) {
       for (let i = 0; i < 8; i++) {
         const pt = this.chequer[player][i].point;
-//        const st = this.chequer[player][i].stack;
 
         if (pt == 14 || pt == 15) { //bear off
           const relativeY = [2, 3, 1, 4, 2.5, 3.5, 1.5, 4.5];
@@ -116,7 +115,6 @@ class OsgBoard {
         const position = this.getPosObj(ex, ey);
         const zindex = 10 + ptStack[pt];
         this.chequer[player][i].position = position;
-//        this.chequer[player][i].zindex = zindex;
         this.chequer[player][i].dom.css(position).css("z-index", zindex);
       }
     }
@@ -227,6 +225,31 @@ class OsgBoard {
 
   flashOffMovablePoint() {
     this.pointAll.removeClass("flash");
+  }
+
+  getChequerOnDragging(pt, player) {
+    const aryreverse = this.chequer[player].reverse();
+    const chker = aryreverse.find(elem => elem.point == pt); //一番上の(最後の)チェッカーを返す
+    return chker;
+  }
+
+  redraw(ogid) {
+    this.bgBoardConfig();
+
+    //dice
+    this.dice[1][0].css(this.getPosObj(this.dice10X, this.dice1Y));
+    this.dice[1][1].css(this.getPosObj(this.dice11X, this.dice1Y));
+    this.dice[2][0].css(this.getPosObj(this.dice20X, this.dice2Y));
+    this.dice[2][1].css(this.getPosObj(this.dice21X, this.dice2Y));
+    //dicepool
+    $("#dicepool1").css(this.getPosObj(this.dice10X - 30, this.dice1Y -10));
+    $("#dicepool2").css(this.getPosObj(this.dice20X - 30, this.dice2Y -10));
+    //point
+    for (let i = 0; i < 16; i++) {
+      this.point[i].css(this.getPosObj(this.pointX[i], this.pointY[i]));
+    }
+
+    this.showBoard(ogid);
   }
 
 } //class OsgBoard

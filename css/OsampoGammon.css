@@ -135,6 +135,12 @@ body{
 .player2base{
   background-color:#eef;
 }
+.player1chequer{
+  color:#fcc;
+}
+.player2chequer{
+  color:#ccf;
+}
 
 /* Point Flashing ------------------------------------- */
 .flash{

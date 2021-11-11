@@ -30,6 +30,9 @@ class OsgGame {
     //chequer
     this.chequerall  = $(".chequer");
 
+    //point
+    this.point       = $(".point,.pool");
+
     //panel
     this.panelholder = $("#panelholder");
     this.allpanel    = $(".panel,#undobtn,#donebtn,#rollbtn");
@@ -51,6 +54,8 @@ class OsgGame {
     this.donebtn.    on(clickEventType, (e) => { e.preventDefault(); this.doneAction(); });
     this.undobtn.    on(clickEventType, (e) => { e.preventDefault(); this.undoAction(); });
     this.nextgamebtn.on(clickEventType, (e) => { e.preventDefault(); this.nextGameAction(); });
+    this.point.      on('touchstart mousedown', (e) => { e.preventDefault(); this.pointTouchStartAction(e); });
+    $(window).       on('resize',       (e) => { e.preventDefault(); this.redrawAction(); }); 
 
     //設定画面
     this.settingbtn.on(clickEventType, (e) => {
@@ -60,13 +65,13 @@ class OsgGame {
     });
     this.resignbtn. on(clickEventType, (e) => { //for DEBUG
       e.preventDefault();
-      this.settings.slideToggle("normal");
+      this.settings.slideUp("normal");
       this.swapTurn();
       this.bearoffAllAction();
     });
     this.newgamebtn.on(clickEventType, (e) => {
       e.preventDefault();
-      this.settings.slideToggle("normal"); //画面を消す
+      this.settings.slideUp("normal"); //画面を消す
       this.nextGameAction();
     });
   }
@@ -102,6 +107,7 @@ class OsgGame {
       this.showCannotMovePanel(this.player);
       await OsgUtil.sleep(1000);
       this.cannotmove.fadeOut(1500);
+      await OsgUtil.sleep(1500); //フェードアウトを待って
       this.doneAction(); //「動かし終わり」のボタンを勝手にクリック
       return;
     }
@@ -158,7 +164,7 @@ class OsgGame {
   }
 
   showGameEndPanel(player) {
-    this.showElement(this.gameend,  player, true);
+    this.showElement(this.gameend, player, true);
   }
 
   showYouFirstPanel(player) {
@@ -182,9 +188,9 @@ class OsgGame {
     elem.show().toggleClass('turn1', player).toggleClass('turn2', !player).css(postision);
   }
 
-  calcElementPosition(elem, player, pos = null) {
+  calcElementPosition(elem, player, pos = false) {
     let xx, yy;
-    if (pos == null) {
+    if (pos == false) {
       const tf = (player) ? "T" : "F";
       const idpos = elem.attr("id") + tf;
       const pposary = {"rollbtnT": [50, 90], "undobtnT": [30, 90], "donebtnT": [50, 90],
@@ -251,7 +257,6 @@ class OsgGame {
                    left: dragobj.offsetLeft,
                    top:  dragobj.offsetTop
                  }};
-//console.log("evfn_dragstart", dragobj, event, x, y, event.pageX, event.pageY, event.clientX, event.screenX, event.offsetX);
       this.dragStartAction(origevt, ui);
     });
 
@@ -265,7 +270,6 @@ class OsgGame {
       //マウスが動いた場所に要素を動かす
       dragobj.style.top  = event.pageY - y + "px";
       dragobj.style.left = event.pageX - x + "px";
-//console.log("evfn_drag", x, y, event.pageX, event.pageY);
     });
 
     //ドラッグ終了時のコールバック関数
@@ -285,7 +289,6 @@ class OsgGame {
                    left: dragobj.offsetLeft,
                    top:  dragobj.offsetTop
                  }};
-//console.log("evfn_dragend", dragobj, origevt, ui);
       this.dragStopAction(origevt, ui);
     });
 
@@ -365,6 +368,48 @@ class OsgGame {
 
   flashOffMovablePoint() {
     this.board.flashOffMovablePoint();
+  }
+
+  pointTouchStartAction(origevt) {
+    const id = origevt.currentTarget.id;
+    const pt = parseInt(id.substr(2));
+    const chker = this.board.getChequerOnDragging(pt, OsgUtil.cvtTurnGm2Bd(this.player));
+    const evttypeflg = (origevt.type === "mousedown")
+    const event = (evttypeflg) ? origevt : origevt.changedTouches[0];
+
+    if (chker) { //chker may be undefined
+      const chkerdom = chker.dom;
+      if (chkerdom.hasClass("draggable")) {
+        this.outerDragFlag = true;
+        this.dragStartPos = {left: chkerdom[0].style.left,
+                             top:  chkerdom[0].style.top };
+        chkerdom.css({left: event.clientX - 30,
+                      top:  event.clientY - 30});
+        let delegateEvent;
+        if (evttypeflg) {
+          delegateEvent = new MouseEvent("mousedown", {clientX:event.clientX, clientY:event.clientY});
+        } else {
+          const touchobj = new Touch({identifier: 12345,
+                                      target: chkerdom[0],
+                                      clientX: event.clientX,
+                                      clientY: event.clientY,
+                                      pageX: event.pageX,
+                                      pageY: event.pageY});
+          delegateEvent = new TouchEvent("touchstart", {changedTouches:[touchobj]});
+        }
+        chkerdom[0].dispatchEvent(delegateEvent);
+      }
+    }
+  }
+
+  redrawAction() {
+    this.board.redraw(this.osgid);
+
+    this.allpanel.each((index, elem) => {
+      if ($(elem).css("display") != "none") {
+        this.showElement($(elem), this.player, $(elem).hasClass("panel")); //panelは中央表示
+      }
+    });
   }
 
 } //end of class OsgGame
