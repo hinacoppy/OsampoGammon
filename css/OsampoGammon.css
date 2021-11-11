@@ -83,6 +83,7 @@ body{
   text-align: center;
   font-size: 4vw;
   color:#214;
+  padding-top:10vh;
 }
 .dicepool{
   position:absolute;
@@ -95,6 +96,9 @@ body{
   position:absolute;
   display:none;
   z-index:99;
+}
+.relative{
+  position:relative;
 }
 /* Board Object settings ------------------------------------- */
 .dice{
@@ -112,16 +116,6 @@ body{
 }
 .turn2{
   transform:rotateZ(180deg);
-}
-.player2rot{
-  transform:rotateZ(90deg);
-  font-size:2vw;
-  text-align: center;
-}
-.player1rot{
-  transform:rotateZ(-90deg);
-  font-size:2vw;
-  text-align: center;
 }
 .player1col{
   color:#f55;

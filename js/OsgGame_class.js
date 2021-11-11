@@ -34,7 +34,6 @@ class OsgGame {
     this.point       = $(".point,.pool");
 
     //panel
-    this.panelholder = $("#panelholder");
     this.allpanel    = $(".panel,#undobtn,#donebtn,#rollbtn");
     this.splash      = $("#splash");
     this.youfirst    = $("#youfirst");
@@ -43,7 +42,6 @@ class OsgGame {
     this.settings    = $("#settings");
 
     this.hideAllPanel(); //font awesome が描画するのを待つ必要がある
-    this.panelholder.show();
   }
 
   setEventHandler() {

@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-  <meta name="description" content="Osampo Gammon App">
-  <meta name="author" content="(C)hinacoppy 2019 - 2021">
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/OsampoGammon.css">
-  <link rel="stylesheet" href="/css/font-awesome-animation.min.css">
-  <link rel="icon" href="icon/favicon.ico">
-  <link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
-  <title>OsampoGammon</title>
+<meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="description" content="Osampo Gammon App">
+<meta name="author" content="(C)hinacoppy 2019 - 2021">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/OsampoGammon.css">
+<link rel="stylesheet" href="/css/font-awesome-animation.min.css">
+<link rel="icon" href="icon/favicon.ico">
+<link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
+<title>OsampoGammon</title>
 </head>
+
 <body class="container">
 <section id="board" class="boardarea">
 <div id="pt0"  class="pool player2base"></div>
@@ -72,31 +73,25 @@
 <i class="player2col fas fa-arrow-alt-circle-right"  data-fa-transform="shrink-1"></i></span>
 </section>
 
-<section id="panelholder" style="display:none">
-<div id="splash" class="splash panel">
-<p class="mes1">おさんぽギャモン</p>
-<button id="openingroll" class="oparationbtn" style="position:relative;"><i class="fas fa-dice"></i> ゲームを始める</button>
+<div id="splash" class="panel">おさんぽギャモン<br><br>
+<button id="openingroll" class="oparationbtn relative"><i class="fas fa-dice"></i> ゲームを始める</button>
 </div>
-<div id="gameend" class="panel">
-<p class="mes1">あなたの勝ちです</p>
-<button id="nextgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> もう一度遊ぶ</button>
+<div id="gameend" class="panel">あなたの勝ちです<br><br>
+<button id="nextgamebtn" class="oparationbtn relative"><i class="fas fa-check-circle"></i> もう一度遊ぶ</button>
 </div>
-<div id="youfirst" class="panel">
-<p class="mes1">あなたが先攻です</p>
-</div>
-<div id="cannotmove" class="panel">
-<p class="mes1">動かせません</p>
-</div>
+<div id="youfirst" class="panel">あなたが先攻です</div>
+<div id="cannotmove" class="panel">動かせません</div>
+
 <button id="rollbtn" class="oparationbtn"><i class="fas fa-dice"></i> サイコロを振る</button>
 <button id="donebtn" class="oparationbtn"><i class="fas fa-check-circle"></i> 動かし終わり</button>
 <button id="undobtn" class="oparationbtn"><i class="fas fa-undo"></i> 元に戻す</button>
-</section>
 
 <button id="settingbtn" class="oparationbtn"><i class="fas fa-bars"></i></button>
 <aside id="settings" class="settings">
-<button id="newgamebtn" class="oparationbtn" style="position:relative;"><i class="fas fa-check-circle"></i> 新しいゲーム</button><br>
-<button id="resignbtn" class="oparationbtn" style="position:relative;"><i class="fas fa-flag"></i> 降参(for Debug)</button>
+<button id="newgamebtn" class="oparationbtn relative"><i class="fas fa-check-circle"></i> 新しいゲーム</button><br>
+<button id="resignbtn" class="oparationbtn relative"><i class="fas fa-flag"></i> 降参(for Debug)</button>
 </aside>
+
 
 <script src="/js/fontawesome-all.min.js" defer></script>
 <script src="/js/jquery-3.6.0.min.js"></script>
